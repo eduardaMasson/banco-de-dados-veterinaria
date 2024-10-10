@@ -4,10 +4,12 @@ SELECT * FROM VETERINARIO v
 WHERE v.ESPECIALIDADE = 'Dermatologista';
 
 
+
 /* Buscar Pacientes por Faixa Etária */
 
 SELECT * FROM PACIENTE p 
 WHERE p.idade BETWEEN 2 AND 5;
+
 
 
 /* Listar Agendamentos em um Período Específico */
@@ -16,10 +18,12 @@ SELECT * FROM AGENDAMENTO a
 WHERE a.DATA_HORA BETWEEN '2024-01-01' AND '2024-03-31';
 
 
+
 /* Buscar Medicamentos com Preço Superior a Um Valor */
 
 SELECT * FROM MEDICAMENTOS m 
 WHERE m.PRECO > 25;
+
 
 
 /* Filtrar Receitas por Data e Veterinário */
@@ -28,10 +32,12 @@ SELECT * FROM RECEITA r
 WHERE r.DATA_EMISSAO > '2024-06-01' AND r.ID_AGENDAMENTO = (SELECT a.id_agendamento FROM AGENDAMENTO a WHERE a.id_veterinario = (SELECT v.id_veterinario FROM VETERINARIO v WHERE v.nome = 'Dr. Ana Souza'));
 
 
+
 /* Listar Pacientes de Um Tutor Específico */
 
 SELECT * FROM PACIENTE p 
 WHERE p.ID_TUTOR = (SELECT TUTOR.ID_TUTOR FROM TUTOR WHERE TUTOR.NOME LIKE 'Maria Silva');
+
 
 
 /* Buscar Itens de Receita para Medicamento Específico */
@@ -40,10 +46,12 @@ SELECT * FROM ITENSRECEITA i
 WHERE i.ID_MEDICAMENTO = (SELECT ID_MEDICAMENTO FROM MEDICAMENTOS m WHERE M.NOME = 'Anti-inflamatório Y');
 
 
+
 /* Listar Agendamentos por Veterinário e Motivo */
 
 SELECT * FROM AGENDAMENTO a2 
 WHERE a2.MOTIVO = 'Exame de sangue' AND a2.ID_VETERINARIO = (SELECT v.id_veterinario FROM VETERINARIO v WHERE v.nome = 'Dr. Pedro Lima');
+
 
 
 /* Listar Medicamentos com Descrição Não Nula e Preço Inferior a 50 Reais */
@@ -52,10 +60,12 @@ SELECT * FROM MEDICAMENTOS m
 WHERE m.PRECO < 50 AND m.DESCRICAO IS NOT NULL;
 
 
+
 /* Listar Pacientes com Peso Entre Dois Valores */
 
 SELECT * FROM PACIENTE p 
 WHERE p.PESO BETWEEN 3 AND 10;
+
 
 
 /* Buscar Pacientes de um Tutor e com Peso Superior a um Valor */
@@ -64,10 +74,29 @@ SELECT * FROM PACIENTE p
 WHERE p.ID_TUTOR = (SELECT TUTOR.ID_TUTOR FROM TUTOR WHERE TUTOR.NOME LIKE 'Carlos Lima' AND p.peso > 5);
 
 
+
 /* Listar Pacientes de Especie 'Cão' com Peso Inferior a 7 kg */
 
 SELECT * FROM PACIENTE p 
 WHERE ESPECIE = 'Cão' AND p.peso < 7;
 
 
+
 /* Listar Agendamentos de um Período com Peso dos Pacientes */
+
+SELECT a.id_paciente, p.nome, p.peso FROM AGENDAMENTO a, PACIENTE p
+WHERE a.id_paciente = p.id_paciente AND a.DATA_HORA BETWEEN '2024-04-01' AND '2024-06-30';
+
+
+
+/* Listar Pacientes que Não Tiveram Consultas */
+
+SELECT * FROM PACIENTE p2
+WHERE p2.id_paciente NOT IN (SELECT a2.id_paciente FROM AGENDAMENTO a2);
+
+
+
+/* Listar Pacientes que Não Tiveram Consultas por período */
+
+SELECT * FROM PACIENTE p2
+WHERE p2.id_paciente NOT IN (SELECT a2.id_paciente FROM AGENDAMENTO a2 WHERE a2.data_hora BETWEEN '2024-01-01' AND '2024-01-15');
